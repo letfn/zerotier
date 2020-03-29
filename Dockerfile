@@ -1,5 +1,7 @@
-FROM letfn/container
+FROM spikhalskiy/zerotier-containerized:1.4.6
 
-COPY plugin /plugin
+COPY service /service
 
-ENTRYPOINT [ "/tini", "--", "/plugin" ]
+ENTRYPOINT [ "/service" ]
+
+CMD [ ]

@@ -30,3 +30,9 @@ docs: # Build docs
 build: # Build container
 	@echo
 	drone exec --pipeline $@ --secret-file ../.drone.secret
+
+daemon.json:
+	@jq -n --arg cidr "$(shell $(MAKE) fixed-cidr-v6)" '{debug: true, experimental: true, ipv6: true, "fixed-cidr-v6": $$cidr}'
+
+fixed-cidr-v6:
+	@echo $(shell docker-compose exec zerotier zerotier-cli listnetworks | tail -n +2 | head -1 | awk '{print $$9}' | cut -d, -f1 | cut -d/ -f1 | cut -b1-12)$(shell cut -c 1-2 data/identity.public):$(shell cut -c 3-6 data/identity.public):$(shell cut -c 7-10 data/identity.public)::/80

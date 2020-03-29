@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+function main {
+  set -exfu
+
+  exec /main.sh zerotier-one
+}
+
+main "$@"
