@@ -24,12 +24,12 @@ weight: -1
 
 ## configure docker with zerotier ipv6 network
 
-    make daemon.json > /etc/docker/daemon.json
-    systemctl restart docker
+    make daemon.json | sudo tee /etc/docker/daemon.json
+    sudo systemctl restart docker
 
 ## persist zerotier node identity
 
-    rsync -ia /data/. data/.
+    rsync -ia data/. /data/.
 
 ## example container with zerotier ipv6 address
 
