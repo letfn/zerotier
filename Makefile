@@ -40,4 +40,8 @@ fixed-cidr-v6:
 multipass:
 	multipass delete --all --purge || true
 	multipass delete --all --purge
-	multipass launch -m 500m -d 20g -c 1 -n zerotier --cloud-init cloud-init.conf bionic
+	multipass launch -m 500m -d 10g -c 1 -n zt0 --cloud-init cloud-init.conf bionic
+	multipass launch -m 500m -d 10g -c 1 -n zt1 --cloud-init cloud-init.conf bionic
+	mkdir -p /tmp/data/zerotier/zt0 /tmp/data/zerotier/zt1
+	multipass mount /tmp/data/zerotier/zt0 zt0:/data
+	multipass mount /tmp/data/zerotier/zt1 zt1:/data
