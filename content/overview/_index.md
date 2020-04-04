@@ -8,16 +8,19 @@ weight: -1
     mkdir -p work
     git clone https://github.com/letfn/zerotier work/zerotier
     cd work/zerotier
+
+### restore zerotier /data
+
+    rsync -ia /data/. data/.
+
+### start zerotier
+
     docker-compose up  -d
 
 ## initial join
 
     docker-compose exec zerotier zerotier-cli join YYYYYY
     docker-compose exec zerotier zerotier-cli listnetworks
-
-### alternative: with zerotier /data
-
-    rsync -ia /data/. data/.
 
 ## configure docker with zerotier ipv6 network
 
