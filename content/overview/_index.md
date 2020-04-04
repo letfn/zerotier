@@ -3,29 +3,14 @@ title: Overview
 toc: true
 weight: -1
 ---
-text
+## docker-compose on multipass
 
-## head 1
-
-text
-
-## head 2
-
-text
-
-## head 3
-
-text
-
-## head 4
-
-text
-
-## head 5
-
-text
-
-## head 6
-
-text
-
+    mkdir -p work
+    git clone https://github.com/letfn/zerotier work/zerotier
+    cd work/zerotier
+    docker-compose up  -d
+    docker-compose exec zerotier zerotier-cli join YYYYYY
+    make daemon.json > /etc/docker/daemon.json
+    systemctl restart docker
+    docker run -d --name ubuntu ubuntu sleep 3600
+    docker inspect ubuntu | jq -r '.[].NetworkSettings.Networks.bridge.GlobalIPv6Address'
