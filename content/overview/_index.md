@@ -3,6 +3,15 @@ title: Overview
 toc: true
 weight: -1
 ---
+## create multipass nodes
+
+    make multipass
+
+## get on a zerotier node
+
+    multipass shell zt0
+    multipass shell zt1
+
 ## docker-compose on multipass
 
     mkdir -p work
