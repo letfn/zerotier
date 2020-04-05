@@ -10,4 +10,4 @@ services:
     devices:
     - /dev/net/tun
     volumes:
-    - ./data:/var/lib/zerotier-one
+    - ./data/zerotier:/var/lib/zerotier-one

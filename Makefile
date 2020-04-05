@@ -41,7 +41,7 @@ fixed-cidr-v6:
 zt0 zt1:
 	multipass delete --purge $@ || true
 	multipass launch -m 4g -d 20g -c 2 -n $@ --cloud-init cloud-init.conf bionic
-	multipass mount /tmp/data/zerotier/$@ $@:/data
+	multipass mount /tmp/data/$@ $@:/data
 	multipass exec $@ -- git clone https://github.com/amanibhavam/homedir homedir
 	multipass exec $@ -- mv homedir/.git . && rm -rf homedir && git reset --hard
 	multipass exec $@ -- make asdf
