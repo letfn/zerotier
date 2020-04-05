@@ -45,3 +45,11 @@ multipass:
 	mkdir -p /tmp/data/zerotier/zt0 /tmp/data/zerotier/zt1
 	multipass mount /tmp/data/zerotier/zt0 zt0:/data
 	multipass mount /tmp/data/zerotier/zt1 zt1:/data
+
+restore:
+	mkdir -p work
+	git clone https://github.com/letfn/zerotier work/zerotier
+	rsync -ia /data/. work/zerotier/data/.
+	cd work/zerotier && docker-compose up  -d
+	cd work/zerotier && (make daemon.json | sudo tee /etc/docker/daemon.json)
+	sudo systemctl restart docker
