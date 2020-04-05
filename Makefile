@@ -51,7 +51,7 @@ zt0 zt1:
 	multipass exec $@ -- mkdir -p work
 	multipass exec $@ -- git clone https://github.com/letfn/zerotier work/zerotier
 	multipass exec $@ -- docker pull letfn/zerotier
-	docker-compose up  -d
-	make daemon.json
-	sudo mv daemon.json /etc/docker/daemon.json
-	sudo systemctl restart docker
+	multipass exec $@ -- docker-compose up  -d
+	multipass exec $@ -- make daemon.json
+	multipass exec $@ -- sudo mv daemon.json /etc/docker/daemon.json
+	multipass exec $@ -- sudo systemctl restart docker
