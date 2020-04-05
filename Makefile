@@ -40,9 +40,13 @@ fixed-cidr-v6:
 
 zt0 zt1:
 	multipass delete --purge $@ || true
-	multipass delete --purge $@
-	multipass launch -m 500m -d 10g -c 1 -n $@ --cloud-init cloud-init.conf bionic
-	mkdir -p /tmp/data/zerotier/$@ /tmp/data/zerotier/zt1
+	multipass launch -m 4g -d 20g -c 2 -n $@ --cloud-init cloud-init.conf bionic
+	multipass transfer .tool-versions $@:.tool-versions
+	multipass exec $@ -- git clone https://github.com/asdf-vm/asdf.git .asdf --branch v0.7.8
+	multipass exec $@ -- .asdf/bin/asdf plugin-add kind
+	multipass exec $@ -- .asdf/bin/asdf plugin-add kustomize
+	multipass exec $@ -- .asdf/bin/asdf plugin-add kubectl
+	multipass exec $@ -- .asdf/bin/asdf install
 	multipass mount /tmp/data/zerotier/$@ $@:/data
 	multipass exec $@ -- mkdir -p work
 	multipass exec $@ -- git clone https://github.com/letfn/zerotier work/zerotier
