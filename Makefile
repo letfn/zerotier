@@ -51,6 +51,7 @@ zt0 zt1:
 	multipass exec $@ -- mkdir -p work
 	multipass exec $@ -- git clone https://github.com/letfn/zerotier work/zerotier
 	multipass exec $@ -- docker pull letfn/zerotier
+	if test -f /tmp/data/zerotier/$@/authtoken.secret; then multipass exec $2@ -- bash -c 'cd work/zerotier && make restore'; fi
 
 restore:
 	rsync -ia /data/. data/.
