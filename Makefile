@@ -41,14 +41,16 @@ fixed-cidr-v6:
 multipass:
 	multipass delete --all --purge || true
 	multipass delete --all --purge
-	multipass launch -m 500m -d 10g -c 1 -n zt0 --cloud-init cloud-init.conf bionic
-	multipass launch -m 500m -d 10g -c 1 -n zt1 --cloud-init cloud-init.conf bionic
-	mkdir -p /tmp/data/zerotier/zt0 /tmp/data/zerotier/zt1
-	multipass mount /tmp/data/zerotier/zt0 zt0:/data
-	multipass mount /tmp/data/zerotier/zt1 zt1:/data
-	multipass exec zt0 -- mkdir -p work
-	multipass exec zt0 -- git clone https://github.com/letfn/zerotier work/zerotier
-	multipass exec zt0 -- docker pull letfn/zerotier
+	$(MAKE) zt0
+	$(MAKE) zt1
+
+zt0 zt1:
+	multipass launch -m 500m -d 10g -c 1 -n $@ --cloud-init cloud-init.conf bionic
+	mkdir -p /tmp/data/zerotier/$@ /tmp/data/zerotier/zt1
+	multipass mount /tmp/data/zerotier/$@ $@:/data
+	multipass exec $@ -- mkdir -p work
+	multipass exec $@ -- git clone https://github.com/letfn/zerotier work/zerotier
+	multipass exec $@ -- docker pull letfn/zerotier
 
 restore:
 	rsync -ia /data/. data/.
