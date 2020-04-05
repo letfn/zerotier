@@ -3,24 +3,13 @@ title: Overview
 toc: true
 weight: -1
 ---
-## create multipass nodes
+## create multipass node
 
-    make multipass
+    make zt0
 
 ## get on a zerotier node
 
     multipass shell zt0
-    multipass shell zt1
-
-## docker-compose on multipass
-
-    mkdir -p work
-    git clone https://github.com/letfn/zerotier work/zerotier
-    cd work/zerotier
-
-### restore zerotier /data
-
-    rsync -ia /data/. data/.
 
 ### start zerotier
 
