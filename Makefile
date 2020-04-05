@@ -48,6 +48,7 @@ multipass:
 	multipass mount /tmp/data/zerotier/zt1 zt1:/data
 	multipass exec zt0 -- mkdir -p work
 	multipass exec zt0 -- git clone https://github.com/letfn/zerotier work/zerotier
+	multipass exec zt0 -- docker pull letfn/zerotier
 
 restore:
 	rsync -ia /data/. data/.
