@@ -25,10 +25,6 @@ weight: -1
     make daemon.json | sudo tee /etc/docker/daemon.json
     sudo systemctl restart docker
 
-## persist zerotier node identity
-
-    rsync -ia data/. /data/.
-
 ## example container with zerotier ipv6 address
 
     docker run -d --name ubuntu ubuntu sleep 3600
