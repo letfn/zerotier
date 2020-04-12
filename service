@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-function sidecar {
+function ztjoin {
   while ! zerotier-cli info | grep ONLINE; do
     echo "waiting for ONLINE $(date)"
     sleep 1;
@@ -16,16 +16,13 @@ function sidecar {
     echo "waiting for JOIN $(date)"
     sleep 1;
   done
-
-  echo address=/$(cat /data/config/SRC_NAME)/${ZT_IP} > /data/dnsmasq.d/zt-$(cat /data/config/SRC_NAME).conf
-  socat TCP-LISTEN:$(cat /data/config/SRC_PORT),bind=${ZT_IP},fork TCP:$(cat /data/config/DEST)
 }
 
 function main {
   set -exfu
   
   if [[ -f /data/config/ZT_NETWORK ]]; then
-    sidecar &
+    ztjoin &
   fi
 
   exec /main.sh zerotier-one
