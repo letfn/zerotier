@@ -16,6 +16,19 @@ function ztjoin {
     echo "waiting for JOIN $(date)"
     sleep 1;
   done
+
+  local zt_vip="$(cat /data/config/ZT_VIP 2>/dev/null || true)"
+  if [[ -n "${zt_vip}" ]]; then
+    local ip_eth0="$(ifconfig eth0 | grep 'inet addr:' | awk '{print $2}' | cut -d: -f2)"
+    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 80 -j DNAT --to-destination "${ip_eth0}"
+    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 443 -j DNAT --to-destination "${ip_eth0}"
+  fi
+
+  local zt_dest="$(cat /data/config/ZT_DEST 2>/dev/null || true)"
+  if [[ -n "${zt_dest}" ]]; then
+    socat tcp4-listen:80,reuseaddr,fork "TCP:${zt_dest}:80" &
+    socat tcp4-listen:443,reuseaddr,fork "TCP:${zt_dest}:443" &
+  fi
 }
 
 function main {
