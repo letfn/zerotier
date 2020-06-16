@@ -47,7 +47,6 @@ steps:
     password:
       from_secret: docker_password
     repo: letfn/zerotier
-    skip_tls_verify: true
     tag: latest
     username:
       from_secret: docker_username
@@ -69,12 +68,31 @@ steps:
 - name: local
   image: letfn/drone-hugo
 
-- name: gh-pages
-  image: letfn/drone-hugo
-  settings:
-    github_pages: true
-
 depends_on:
 - build
+
+---
+kind: secret
+name: docker_username
+
+get:
+  path: kv/data/drone/common
+  name: docker_username
+
+---
+kind: secret
+name: docker_password
+
+get:
+  path: kv/data/drone/common
+  name: docker_password
+
+---
+kind: secret
+name: github_token
+
+get:
+  path: kv/data/drone/common
+  name: github_token
 
 ...
