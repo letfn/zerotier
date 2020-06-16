@@ -26,8 +26,10 @@ function ztjoin {
 
   local zt_dest="$(cat /data/config/ZT_DEST 2>/dev/null || true)"
   if [[ -n "${zt_dest}" ]]; then
+    socat tcp4-listen:22,reuseaddr,fork "TCP:${zt_dest}:22" &
     socat tcp4-listen:80,reuseaddr,fork "TCP:${zt_dest}:80" &
     socat tcp4-listen:443,reuseaddr,fork "TCP:${zt_dest}:443" &
+    socat tcp4-listen:1194,reuseaddr,fork "TCP:${zt_dest}:1194" &
   fi
 }
 
