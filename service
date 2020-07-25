@@ -22,8 +22,10 @@ function ztjoin {
   local zt_vip="${ZT_VIP:-}"
   if [[ -n "${zt_vip}" ]]; then
     local ip_eth0="$(ifconfig eth0 | grep 'inet addr:' | awk '{print $2}' | cut -d: -f2)"
+    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 22 -j DNAT --to-destination "${ip_eth0}"
     iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 80 -j DNAT --to-destination "${ip_eth0}"
     iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 443 -j DNAT --to-destination "${ip_eth0}"
+    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 1194 -j DNAT --to-destination "${ip_eth0}"
   fi
 
   local zt_dest="${ZT_DEST:-}"
