@@ -6,7 +6,9 @@ function ztjoin {
     sleep 1;
   done
 
-  zerotier-cli join "$(cat /data/config/ZT_NETWORK)"
+  if [[ -n "${ZT_NETWORK:-}" ]]; then
+    zerotier-cli join "${ZT_NETWORK}"
+  fi
 
   while true; do
     ZT_IP="$(ifconfig "$(zerotier-cli listnetworks | grep OK | awk '{print $8}')" | grep 'inet addr' | awk '{print $2}' | cut -d: -f2-)"
@@ -17,14 +19,14 @@ function ztjoin {
     sleep 1;
   done
 
-  local zt_vip="$(cat /data/config/ZT_VIP 2>/dev/null || true)"
+  local zt_vip="${ZT_VIP:-}"
   if [[ -n "${zt_vip}" ]]; then
     local ip_eth0="$(ifconfig eth0 | grep 'inet addr:' | awk '{print $2}' | cut -d: -f2)"
     iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 80 -j DNAT --to-destination "${ip_eth0}"
     iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 443 -j DNAT --to-destination "${ip_eth0}"
   fi
 
-  local zt_dest="$(cat /data/config/ZT_DEST 2>/dev/null || true)"
+  local zt_dest="${ZT_DEST:-}"
   if [[ -n "${zt_dest}" ]]; then
     socat tcp4-listen:22,reuseaddr,fork "TCP:${zt_dest}:22" &
     socat tcp4-listen:80,reuseaddr,fork "TCP:${zt_dest}:80" &
@@ -36,7 +38,7 @@ function ztjoin {
 function main {
   set -exfu
   
-  if [[ -f /data/config/ZT_NETWORK ]]; then
+  if [[ -n "${ZT_NETWORK:-}" ]]; then
     ztjoin &
   fi
 
