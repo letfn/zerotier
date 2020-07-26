@@ -19,25 +19,17 @@ function ztjoin {
     sleep 1;
   done
 
-  local zt_vip="${ZT_VIP:-}"
-  if [[ -n "${zt_vip}" ]]; then
-    local ip_eth0="$(ifconfig eth0 | grep 'inet addr:' | awk '{print $2}' | cut -d: -f2)"
-    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 22 -j DNAT --to-destination "${ip_eth0}"
-    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 80 -j DNAT --to-destination "${ip_eth0}"
-    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 443 -j DNAT --to-destination "${ip_eth0}"
-    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 1194 -j DNAT --to-destination "${ip_eth0}"
-    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 53 -j DNAT --to-destination "${ip_eth0}"
-    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p udp --dport 53 -j DNAT --to-destination "${ip_eth0}"
-  fi
+  if [[ -n "${ZT_VIP:-}" ]]; then
+    local zt="$(zerotier-cli listnetworks | grep "${ZT_NETWORK}" | awk '{print $8}')"
+    ip addr add "${ZT_VIP:-}/32" dev "${zt}" || true
+    ifconfig -a "${zt}"
+  fi 
 
-  local zt_dest="${ZT_DEST:-}"
-  if [[ -n "${zt_dest}" ]]; then
-    socat tcp4-listen:22,reuseaddr,fork   "TCP:${zt_dest}:2222" &
-    socat tcp4-listen:80,reuseaddr,fork   "TCP:${zt_dest}:80" &
-    socat tcp4-listen:443,reuseaddr,fork  "TCP:${zt_dest}:443" &
-    socat tcp4-listen:1194,reuseaddr,fork "TCP:${zt_dest}:1194" &
-    socat tcp4-listen:53,reuseaddr,fork   "TCP:${zt_dest}:53" &
-    socat udp4-recvfrom:53,fork   "UDP4-SENDTO:${zt_dest}:53" &
+  if [[ -n "${ZT_DEST:-}" ]]; then
+    socat tcp4-listen:22,reuseaddr,fork   "TCP:${ZT_DEST}:2222" &
+    socat tcp4-listen:80,reuseaddr,fork   "TCP:${ZT_DEST}:80" &
+    socat tcp4-listen:443,reuseaddr,fork  "TCP:${ZT_DEST}:443" &
+    socat tcp4-listen:1194,reuseaddr,fork "TCP:${ZT_DEST}:1194" &
   fi
 }
 
