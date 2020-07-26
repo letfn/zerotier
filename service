@@ -13,6 +13,7 @@ function ztjoin {
   while true; do
     ZT_IP="$(ifconfig "$(zerotier-cli listnetworks | grep OK | awk '{print $8}')" | grep 'inet addr' | awk '{print $2}' | cut -d: -f2-)"
     if [[ -n "${ZT_IP}" ]]; then
+      export ZT_IP
       break
     fi
     echo "waiting for JOIN $(date)"
@@ -25,19 +26,18 @@ function ztjoin {
     ifconfig -a "${zt}"
   fi
 
-  if [[ -n "${ZT_DEST:-}" ]]; then
-    socat tcp4-listen:22,reuseaddr,fork   "TCP:${ZT_DEST}:2222" &
-    socat tcp4-listen:80,reuseaddr,fork   "TCP:${ZT_DEST}:80" &
-    socat tcp4-listen:443,reuseaddr,fork  "TCP:${ZT_DEST}:443" &
-    socat tcp4-listen:1194,reuseaddr,fork "TCP:${ZT_DEST}:1194" &
-    socat tcp4-listen:53,reuseaddr,fork   "TCP:${ZT_DEST}:53" &
-    socat udp4-recvfrom:53,fork   "UDP4-SENDTO:${ZT_DEST}:53" &
+  if [[ -x /service.d/hook-customize ]]; then
+    /service.d/hook-customize
   fi
 }
 
 function main {
   set -exfu
   
+  if [[ -x /service.d/hook-start ]]; then
+    /service.d/hook-start
+  fi
+
   if [[ -n "${ZT_NETWORK:-}" ]]; then
     ztjoin &
   fi
