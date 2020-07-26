@@ -26,14 +26,18 @@ function ztjoin {
     iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 80 -j DNAT --to-destination "${ip_eth0}"
     iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 443 -j DNAT --to-destination "${ip_eth0}"
     iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 1194 -j DNAT --to-destination "${ip_eth0}"
+    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p tcp --dport 53 -j DNAT --to-destination "${ip_eth0}"
+    iptables -t nat -A PREROUTING --dst "${zt_vip}" -p udp --dport 53 -j DNAT --to-destination "${ip_eth0}"
   fi
 
   local zt_dest="${ZT_DEST:-}"
   if [[ -n "${zt_dest}" ]]; then
-    socat tcp4-listen:22,reuseaddr,fork "TCP:${zt_dest}:2222" &
-    socat tcp4-listen:80,reuseaddr,fork "TCP:${zt_dest}:80" &
-    socat tcp4-listen:443,reuseaddr,fork "TCP:${zt_dest}:443" &
+    socat tcp4-listen:22,reuseaddr,fork   "TCP:${zt_dest}:2222" &
+    socat tcp4-listen:80,reuseaddr,fork   "TCP:${zt_dest}:80" &
+    socat tcp4-listen:443,reuseaddr,fork  "TCP:${zt_dest}:443" &
     socat tcp4-listen:1194,reuseaddr,fork "TCP:${zt_dest}:1194" &
+    socat tcp4-listen:53,reuseaddr,fork   "TCP:${zt_dest}:53" &
+    socat udp4-recvfrom:53,fork   "UDP4-SENDTO:${zt_dest}:53" &
   fi
 }
 
