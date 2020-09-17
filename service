@@ -42,6 +42,12 @@ function main {
     ztjoin &
   fi
 
+  if [[ -n "${ZT_IDENTITY_SECRET:-}" ]]; then
+    echo -n "${ZT_IDENTITY_PUBLIC}" > /var/lib/zerotier-one/identity.public
+    echo -n "${ZT_IDENTITY_SECRET}" > /var/lib/zerotier-one/identity.secret
+    echo -n "${ZT_AUTHTOKEN_SECRET}" > /var/lib/zerotier-one/authtoken.secret
+  fi
+
   exec /main.sh zerotier-one
 }
 
