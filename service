@@ -26,6 +26,10 @@ function ztjoin {
     ifconfig -a "${zt}"
   fi
 
+  echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+  sysctl -p
+  iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
   if [[ -x /service.d/hook-customize ]]; then
     /service.d/hook-customize
   fi
@@ -38,14 +42,14 @@ function main {
     /service.d/hook-start
   fi
 
-  if [[ -n "${ZT_NETWORK:-}" ]]; then
-    ztjoin &
-  fi
-
   if [[ -n "${ZT_IDENTITY_SECRET:-}" ]]; then
     echo -n "${ZT_IDENTITY_PUBLIC}" > /var/lib/zerotier-one/identity.public
     echo -n "${ZT_IDENTITY_SECRET}" > /var/lib/zerotier-one/identity.secret
     echo -n "${ZT_AUTHTOKEN_SECRET}" > /var/lib/zerotier-one/authtoken.secret
+  fi
+
+  if [[ -n "${ZT_NETWORK:-}" ]]; then
+    ztjoin &
   fi
 
   exec /main.sh zerotier-one
