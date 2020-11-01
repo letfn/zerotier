@@ -1,8 +1,9 @@
-version: '3.4'
+version: '3.7'
+
 services:
   zerotier:
     image: letfn/zerotier
-    restart: always
+    env_file: .env
     network_mode: host
     cap_add:
     - NET_ADMIN
@@ -10,4 +11,4 @@ services:
     devices:
     - /dev/net/tun
     volumes:
-    - /data/zerotier:/var/lib/zerotier-one
+    - ./etc/zerotier:/var/lib/zerotier-one
