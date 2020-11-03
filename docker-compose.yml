@@ -12,3 +12,4 @@ services:
     - /dev/net/tun
     volumes:
     - ./etc/zerotier:/var/lib/zerotier-one
+    restart: always
