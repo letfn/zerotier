@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 function ztjoin {
   while ! zerotier-cli info | grep ONLINE; do

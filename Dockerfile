@@ -1,6 +1,6 @@
 FROM defn/zerotier-containerized:1.6.0
 
-RUN apk add socat iptables bash
+RUN apt-get update -y && apt-get install -y socat iptables bash
 
 COPY service /service
 

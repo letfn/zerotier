@@ -3,14 +3,14 @@ SHELL := /bin/bash
 menu:
 	@perl -ne 'printf("%10s: %s\n","$$1","$$2") if m{^([\w+-]+):[^#]+#\s(.+)$$}' Makefile
 
-build: # Build defn/dnsmasq
-	docker build -t defn/dnsmasq .
+build: # Build defn/zerotier
+	docker build -t defn/zerotier .
 
-push: # Push defn/dnsmasq
-	docker push defn/dnsmasq
+push: # Push defn/zerotier
+	docker push defn/zerotier
 
-bash: # Run bash shell with defn/dnsmasq
-	docker run --rm -ti --entrypoint bash defn/dnsmasq
+bash: # Run bash shell with defn/zerotier
+	docker run --rm -ti --entrypoint bash defn/zerotier
 
 clean:
 	docker-compose down --remove-orphans
