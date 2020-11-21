@@ -11,7 +11,7 @@ function ztjoin {
   fi
 
   while true; do
-    ZT_IP="$(ifconfig "$(zerotier-cli listnetworks | grep OK | awk '{print $8}')" | grep 'inet addr' | awk '{print $2}' | cut -d: -f2-)"
+    ZT_IP="$(ifconfig "$(zerotier-cli listnetworks | grep OK | awk '{print $8}')" | grep 'inet ' | awk '{print $2}' | cut -d: -f2-)"
     if [[ -n "${ZT_IP}" ]]; then
       export ZT_IP
       break
@@ -52,7 +52,8 @@ function main {
     ztjoin &
   fi
 
-  exec /main.sh zerotier-one
+  chown zerotier-one:zerotier-one /dev/net/tun
+  exec /main.sh zerotier-one 2>/tmp/stderr.log 1>/tmp/stdout.log
 }
 
 main "$@"
