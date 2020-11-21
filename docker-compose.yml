@@ -5,6 +5,7 @@ services:
     image: defn/zerotier
     env_file: .env
     network_mode: host
+    privileged: yes
     cap_add:
     - NET_ADMIN
     - SYS_ADMIN
