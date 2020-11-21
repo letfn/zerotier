@@ -31,33 +31,6 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: build
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: kaniko
-  image: letfn/drone-kaniko
-  settings:
-    args: --destination=letfn/zerotier
-    cache: true
-    cache_repo: defn/cache
-    password:
-      from_secret: docker_password
-    repo: letfn/zerotier
-    tag: latest
-    username:
-      from_secret: docker_username
-
-depends_on:
-- fmt
-- lint
-
----
-kind: pipeline
-type: docker
 name: docs
 
 platform:
@@ -67,32 +40,3 @@ platform:
 steps:
 - name: local
   image: letfn/drone-hugo
-
-depends_on:
-- build
-
----
-kind: secret
-name: docker_username
-
-get:
-  path: kv/data/drone/common
-  name: docker_username
-
----
-kind: secret
-name: docker_password
-
-get:
-  path: kv/data/drone/common
-  name: docker_password
-
----
-kind: secret
-name: github_token
-
-get:
-  path: kv/data/drone/common
-  name: github_token
-
-...

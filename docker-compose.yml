@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   zerotier:
-    image: letfn/zerotier
+    image: defn/zerotier
     env_file: .env
     network_mode: host
     cap_add:
