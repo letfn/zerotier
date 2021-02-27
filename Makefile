@@ -27,3 +27,6 @@ recreate:
 
 logs:
 	docker-compose logs -f
+
+env:
+	docker run --rm -v env_zerotier:/secrets alpine cat /secrets/.env > .env

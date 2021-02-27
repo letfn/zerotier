@@ -13,4 +13,9 @@ services:
     - /dev/net/tun
     volumes:
     - ${ZT_MOUNT}/zerotier:/var/lib/zerotier-one
+    - env_zerotier:/secrets
     restart: always
+
+volumes:
+  env_zerotier:
+    external: true
