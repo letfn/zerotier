@@ -36,6 +36,10 @@ function ztjoin {
 }
 
 function main {
+  set -a
+  source /secrets/.env
+  set +a
+
   set -exfu
   
   if [[ -x /service.d/hook-start ]]; then
